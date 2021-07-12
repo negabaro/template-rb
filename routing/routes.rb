@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 # rubocop:disable Layout/HeredocIndentation(RuboCop)
-routes = <<~ROUTES
+root = <<~ROUTES
 # frozen_string_literal: true
 
+# rubocop:disable Style/ClassAndModuleChildren, Lint/RedundantCopDisableDirective
 class ActionDispatch::Routing::Mapper
   def draw(routes_name)
-    instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
+    instance_eval(File.read(Rails.root.join("config/routes/\#{routes_name}.rb")))
   end
 end
 
@@ -16,12 +17,14 @@ Rails.application.routes.draw do
   draw :sidekiq
   draw :test
   draw :api
-  draw: front
+  draw :front
 end
+# rubocop:enable Style/ClassAndModuleChildren, Lint/RedundantCopDisableDirective
+
 ROUTES
 # rubocop:enable Layout/HeredocIndentation(RuboCop)
 
-create_file 'config/routes.rb', routes
+create_file 'config/routes.rb', root
 
 # rubocop:disable Layout/HeredocIndentation(RuboCop)
 sub_routes = <<-SUB_ROUTES
